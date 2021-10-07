@@ -6,7 +6,7 @@ metadata:
   labels:
     app: pair-svc
 spec:
-  replicas: 2
+  replicas: 1
   revisionHistoryLimit: 5
   selector:
     matchLabels:
@@ -25,16 +25,6 @@ spec:
               command: ["sh","-c","sleep 5"]
         ports:
         - containerPort: 60002
-        readinessProbe:
-          tcpSocket:
-            port: 60002
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        livenessProbe:
-          tcpSocket:
-            port: 60002
-          initialDelaySeconds: 15
-          periodSeconds: 20
         resources:
           requests:
             cpu: 500m
@@ -62,47 +52,3 @@ spec:
     - port: 60002
   selector:
     app: pair-svc
-
----
-
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: pair-svc-hpa-c
-  namespace: default
-  labels:
-    app: pair-svc-hpa-c
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: pair-svc
-  minReplicas: 2
-  maxReplicas: 10
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      targetAverageUtilization: 80
-
----
-
-apiVersion: autoscaling/v2beta1
-kind: HorizontalPodAutoscaler
-metadata:
-  name: pair-svc-hpa-m
-  namespace: default
-  labels:
-    app: pair-svc-hpa-m
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: pair-svc
-  minReplicas: 2
-  maxReplicas: 10
-  metrics:
-  - type: Resource
-    resource:
-      name: memory
-      targetAverageUtilization: 80
