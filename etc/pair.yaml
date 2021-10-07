@@ -1,5 +1,5 @@
 Name: pair.rpc
-ListenOn: 127.0.0.1:60002
+ListenOn: 0.0.0.0:60002
 Etcd:
   Hosts:
     - etcd.default.svc.cluster.local:2379
