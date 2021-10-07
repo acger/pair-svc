@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: pair-svc
-        image: dk251626910:ffl-pair-svc
+        image: docer.io/dk251626910:ffl-pair-svc:latest
         lifecycle:
           preStop:
             exec:
@@ -55,7 +55,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: pair-svc-svc
+  name: pair-svc
   namespace: default
 spec:
   ports:
