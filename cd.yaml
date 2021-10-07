@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: pair-svc
-        image: docer.io/dk251626910:ffl-pair-svc:latest
+        image: docer.io/dk251626910/ffl-pair-svc:latest
         lifecycle:
           preStop:
             exec:
@@ -77,7 +77,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: pair-svc
-  minReplicas: 3
+  minReplicas: 2
   maxReplicas: 10
   metrics:
   - type: Resource
@@ -99,7 +99,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: pair-svc
-  minReplicas: 3
+  minReplicas: 2
   maxReplicas: 10
   metrics:
   - type: Resource
