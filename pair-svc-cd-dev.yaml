@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
       - name: pair-svc
-        image: docker.io/dk251626910/ffl-pair-svc:latest
+        image: docker.io/dk251626910/ffl-pair-svc-dev:latest
         lifecycle:
           preStop:
             exec:
