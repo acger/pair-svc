@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/acger/pair-svc/model"
-	"gorm.io/gorm"
+	"github.com/jinzhu/copier"
+	"gorm.io/gorm/clause"
 	"strconv"
 
 	"github.com/acger/pair-svc/internal/svc"
 	"github.com/acger/pair-svc/pair"
 
-	"github.com/tal-tech/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ElementSaveLogic struct {
@@ -38,29 +39,13 @@ func (l *ElementSaveLogic) ElementSave(in *pair.EleSaveReq) (*pair.Response, err
 		return &pair.Response{Code: 0}, nil
 	}
 
-	err := l.svcCtx.DB.Transaction(func(tx *gorm.DB) error {
-		delResult := tx.Where("uid = ?", in.Uid).Delete(&model.Element{})
+	var ele *model.Element
+	copier.Copy(ele, in)
 
-		if delResult.Error != nil {
-			return delResult.Error
-		}
-
-		var ele []model.Element
-
-		for _, e := range in.Element {
-			ele = append(ele, model.Element{
-				Uid:  in.Uid,
-				Name: e.Name,
-				Mode: e.Mode,
-				Star: e.Star,
-				Sort: e.Sort,
-			})
-		}
-
-		tx.Create(ele)
-
-		return nil
-	})
+	err := l.svcCtx.DB.Clauses(clause.OnConflict{
+		Columns: []clause.Column{{Name: "uid"}},
+		UpdateAll: true,
+	}).Create(ele)
 
 	if err != nil {
 		return &pair.Response{Code: 20001}, nil

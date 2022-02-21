@@ -6,10 +6,10 @@ import (
 	"github.com/acger/pair-svc/internal/svc"
 	"github.com/acger/pair-svc/model"
 	"github.com/acger/pair-svc/pair"
-	"github.com/acger/pair-svc/pairclient"
+	"github.com/jinzhu/copier"
 	"gorm.io/gorm"
 
-	"github.com/tal-tech/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type ElementViewLogic struct {
@@ -27,11 +27,11 @@ func NewElementViewLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Eleme
 }
 
 func (l *ElementViewLogic) ElementView(in *pair.EleViewReq) (*pair.EleViewRsp, error) {
-	var ele []model.Element
-	var eleRsp []*pairclient.Element
-	r := l.svcCtx.DB.Find(&ele, "uid = ?", in.Uid)
+	var ele *model.Element
+	var eleRsp *pair.Element
+	r := l.svcCtx.DB.Find(ele, "uid = ?", in.Uid)
 
-	if errors.Is(r.Error, gorm.ErrRecordNotFound){
+	if errors.Is(r.Error, gorm.ErrRecordNotFound) {
 		return &pair.EleViewRsp{Code: 0}, nil
 	}
 
@@ -39,15 +39,7 @@ func (l *ElementViewLogic) ElementView(in *pair.EleViewReq) (*pair.EleViewRsp, e
 		return &pair.EleViewRsp{Code: 20001}, nil
 	}
 
-	for _, e := range ele {
-		eleRsp = append(eleRsp, &pairclient.Element{
-			Uid:  e.Uid,
-			Name: e.Name,
-			Mode: e.Mode,
-			Star: e.Star,
-			Sort: e.Sort,
-		})
-	}
+	copier.Copy(eleRsp, ele)
 
 	return &pair.EleViewRsp{
 		Code:    0,

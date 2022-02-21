@@ -8,11 +8,12 @@ import (
 
 	"github.com/acger/pair-svc/internal/logic"
 	"github.com/acger/pair-svc/internal/svc"
-	"github.com/acger/pair-svc/pair"
+	"github.com/acger/pair-svc/pb/pair"
 )
 
 type PairServer struct {
 	svcCtx *svc.ServiceContext
+	pair.UnimplementedPairServer
 }
 
 func NewPairServer(svcCtx *svc.ServiceContext) *PairServer {

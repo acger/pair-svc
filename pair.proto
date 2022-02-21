@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package pair;
 
+option go_package = "./pair";
+
 service Pair{
   rpc ElementSave(EleSaveReq) returns (Response);
   rpc ElementView(EleViewReq) returns (EleViewRsp);
@@ -33,7 +35,7 @@ message ElePairReq{
 message EleViewRsp{
   int64 Code = 1;
   string Message = 2;
-  repeated Element Element = 3;
+  Element Element = 3;
 }
 
 message EleViewReq{
@@ -42,7 +44,7 @@ message EleViewReq{
 
 message EleSaveReq{
   uint64 Uid = 1;
-  repeated Element Element = 2;
+  Element Element = 2;
 }
 
 message Response{
@@ -55,13 +57,13 @@ message UserElement{
   string Name = 2;
   string Avatar = 3;
   string Account = 4;
-  repeated Element Element = 5;
+  Element Element = 5;
 }
 
 message Element{
   uint64 Uid = 1;
-  string Name = 2;
-  string Mode = 3;
+  string Skill = 2;
+  string SkillNeed = 3;
   bool Star = 4;
-  int64 Sort = 5;
+  int64 Boost = 5;
 }

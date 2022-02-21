@@ -6,9 +6,9 @@ import (
 
 type Element struct {
 	gorm.Model
-	Uid  uint64 `gorm:"index:id_mode,priority:1"`
-	Name string `gorm:"size:60;index:name_mode,priority:1"`
-	Mode string `gorm:"size:10;index:id_mode,priority:2;index:name_mode,priority:2"`
+	Uid  uint64 `gorm:"index"`
+	Skill string `gorm:"size:6000;default:'[]';"`
+	SkillNeed string `gorm:"size:6000;default:'[]';"`
 	Star bool
-	Sort int64
+	Boost int64
 }
