@@ -4,6 +4,7 @@ import (
 	"github.com/acger/pair-svc/database"
 	"github.com/acger/pair-svc/internal/config"
 	"github.com/acger/user-svc/user"
+	es "github.com/elastic/go-elasticsearch/v7"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/zrpc"
 	"gorm.io/gorm"
@@ -14,6 +15,7 @@ type ServiceContext struct {
 	DB      *gorm.DB
 	Cache   *redis.Redis
 	UserSvc user.User
+	ES      *es.Client
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -22,5 +24,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		DB:      database.NewMysql(&c),
 		Cache:   redis.New(c.Cache[0].Host, redis.WithPass(c.Cache[0].Pass)),
 		UserSvc: user.NewUser(zrpc.MustNewClient(c.UserSvc)),
+		ES:      database.NewElasticsearch(&c),
 	}
 }

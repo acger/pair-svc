@@ -5,9 +5,16 @@ import (
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
+type ElasticsearchConf struct {
+	Addresses []string
+	Username  string
+	Password  string
+}
+
 type Config struct {
 	zrpc.RpcServerConf
-	Datasource string
-	Cache cache.CacheConf
-	UserSvc zrpc.RpcClientConf
+	Datasource    string
+	Cache         cache.CacheConf
+	UserSvc       zrpc.RpcClientConf
+	Elasticsearch ElasticsearchConf
 }

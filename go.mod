@@ -4,6 +4,7 @@ go 1.17
 
 require (
 	github.com/acger/user-svc v1.0.3
+	github.com/elastic/go-elasticsearch/v7 v7.17.0
 	github.com/golang/protobuf v1.5.2
 	github.com/jinzhu/copier v0.3.5
 	github.com/zeromicro/go-zero v1.3.0

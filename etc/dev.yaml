@@ -17,3 +17,8 @@ Log:
   Mode: "file"
   Path: "/var/log/filebeat/pair-svc"
   Level: "error"
+Elasticsearch:
+  Addresses:
+    - "http://dev.ll:9200"
+  Username: "elastic"
+  Password: "123456"

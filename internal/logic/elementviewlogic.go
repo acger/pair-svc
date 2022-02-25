@@ -27,23 +27,23 @@ func NewElementViewLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Eleme
 }
 
 func (l *ElementViewLogic) ElementView(in *pair.EleViewReq) (*pair.EleViewRsp, error) {
-	var ele *model.Element
-	var eleRsp *pair.Element
-	r := l.svcCtx.DB.Find(ele, "uid = ?", in.Uid)
+	var ele model.Element
+	var eleRsp pair.Element
+
+	r := l.svcCtx.DB.Find(&ele, "uid = ?", in.Uid)
 
 	if errors.Is(r.Error, gorm.ErrRecordNotFound) {
 		return &pair.EleViewRsp{Code: 0}, nil
 	}
 
 	if r.Error != nil {
-		return &pair.EleViewRsp{Code: 20001}, nil
+		return &pair.EleViewRsp{Code: 20001, Message: r.Error.Error()}, nil
 	}
 
-	copier.Copy(eleRsp, ele)
+	copier.Copy(&eleRsp, &ele)
 
 	return &pair.EleViewRsp{
 		Code:    0,
-		Element: eleRsp,
+		Element: &eleRsp,
 	}, nil
-
 }

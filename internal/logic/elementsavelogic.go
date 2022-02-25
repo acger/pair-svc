@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/acger/pair-svc/model"
 	"github.com/jinzhu/copier"
-	"gorm.io/gorm/clause"
+	"gorm.io/gorm"
 	"strconv"
 
 	"github.com/acger/pair-svc/internal/svc"
@@ -39,19 +39,29 @@ func (l *ElementSaveLogic) ElementSave(in *pair.EleSaveReq) (*pair.Response, err
 		return &pair.Response{Code: 0}, nil
 	}
 
-	var ele *model.Element
-	copier.Copy(ele, in)
+	var ele = model.Element{}
+	err := l.svcCtx.DB.Transaction(func(tx *gorm.DB) error {
+		tx.Where("uid = ?", in.Uid).First(&ele)
+		copier.Copy(&ele, in.Element)
+		ele.Uid = in.Uid
 
-	err := l.svcCtx.DB.Clauses(clause.OnConflict{
-		Columns: []clause.Column{{Name: "uid"}},
-		UpdateAll: true,
-	}).Create(ele)
+		if ele.ID == 0 {
+			if err := tx.Create(&ele).Error; err != nil {
+				return err
+			}
+		} else {
+			if err := tx.Save(&ele).Error; err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 
 	if err != nil {
-		return &pair.Response{Code: 20001}, nil
+		return &pair.Response{Code: 20001, Message: err.Error()}, nil
 	}
 
 	cache.Hset(cacheKey, uidStr, string(inString))
-
 	return &pair.Response{Code: 0}, nil
 }
