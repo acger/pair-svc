@@ -51,7 +51,7 @@ func (l *ElementPairLogic) ElementPair(in *pair.ElePairReq) (*pair.ELeListRsp, e
 		{
 		  "from": ` + fromStr + `,
 		  "size": ` + sizeStr + `,
-		  "_source": ["uid"], 
+		  "_source": ["uid", "skill", "skill_need"], 
 		  "query": {
 			"function_score": {
 			  "query": {
@@ -146,11 +146,13 @@ func (l *ElementPairLogic) ElementPair(in *pair.ElePairReq) (*pair.ELeListRsp, e
 	//RPC获取用户信息
 	var uids []uint64
 	uidHighlight := make(map[int]database.Highlight)
+	uidSource := make(map[int]database.Source)
 
 	for _, h := range result.Hits.Hits {
 		uid := h.Source.UID
 		uids = append(uids, uint64(uid))
 		uidHighlight[uid] = h.Highlight
+		uidSource[uid] = h.Source
 	}
 
 	usersReq := user.UserListReq{Id: uids}
@@ -174,17 +176,19 @@ func (l *ElementPairLogic) ElementPair(in *pair.ElePairReq) (*pair.ELeListRsp, e
 
 	//给搜索结果填补上用户信息
 	var ue []*pair.UserElement
-	for uid, hl := range uidHighlight {
+	for uid, source := range uidSource {
 		id := uint64(uid)
 		e := users[id]
 		e.Element.Uid = id
+		e.Element.Skill = source.Skill
+		e.Element.SkillNeed = source.SkillNeed
 
-		if hl.Skill != nil {
-			e.Element.Skill = hl.Skill[0]
+		if uidHighlight[uid].Skill != nil {
+			e.Element.HighLightSkill = uidHighlight[uid].Skill[0]
 		}
 
-		if hl.SkillNeed != nil {
-			e.Element.SkillNeed = hl.SkillNeed[0]
+		if uidHighlight[uid].SkillNeed != nil {
+			e.Element.HighLightSkillNeed = uidHighlight[uid].SkillNeed[0]
 		}
 
 		ue = append(ue, &e)

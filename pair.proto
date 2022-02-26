@@ -4,66 +4,68 @@ package pair;
 
 option go_package = "./pair";
 
-service Pair{
-  rpc ElementSave(EleSaveReq) returns (Response);
-  rpc ElementView(EleViewReq) returns (EleViewRsp);
-  rpc ElementList(EleListReq) returns (ELeListRsp);
-  rpc ElementPair(ElePairReq) returns (ELeListRsp);
+service Pair {
+    rpc ElementSave(EleSaveReq) returns (Response);
+    rpc ElementView(EleViewReq) returns (EleViewRsp);
+    rpc ElementList(EleListReq) returns (ELeListRsp);
+    rpc ElementPair(ElePairReq) returns (ELeListRsp);
 }
 
-message ELeListRsp{
-  int64 Code = 1;
-  string Message = 2;
-  repeated UserElement UserElement = 3;
-  int64 Page = 4;
-  int64 PageSize = 5;
-  int64 Total = 6;
+message ELeListRsp {
+    int64 Code = 1;
+    string Message = 2;
+    repeated UserElement UserElement = 3;
+    int64 Page = 4;
+    int64 PageSize = 5;
+    int64 Total = 6;
 }
 
-message EleListReq{
-  int64 Page = 1;
-  int64 PageSize = 2;
-  string keyword = 3;
+message EleListReq {
+    int64 Page = 1;
+    int64 PageSize = 2;
+    string keyword = 3;
 }
 
-message ElePairReq{
-  uint64 Uid = 1;
-  int64 Page = 2;
-  int64 PageSize = 3;
+message ElePairReq {
+    uint64 Uid = 1;
+    int64 Page = 2;
+    int64 PageSize = 3;
 }
 
-message EleViewRsp{
-  int64 Code = 1;
-  string Message = 2;
-  Element Element = 3;
+message EleViewRsp {
+    int64 Code = 1;
+    string Message = 2;
+    Element Element = 3;
 }
 
-message EleViewReq{
-  uint64 Uid = 1;
+message EleViewReq {
+    uint64 Uid = 1;
 }
 
-message EleSaveReq{
-  uint64 Uid = 1;
-  Element Element = 2;
+message EleSaveReq {
+    uint64 Uid = 1;
+    Element Element = 2;
 }
 
-message Response{
-  int64 Code = 1;
-  string Message = 2;
+message Response {
+    int64 Code = 1;
+    string Message = 2;
 }
 
-message UserElement{
-  uint64 Id = 1;
-  string Name = 2;
-  string Avatar = 3;
-  string Account = 4;
-  Element Element = 5;
+message UserElement {
+    uint64 Id = 1;
+    string Name = 2;
+    string Avatar = 3;
+    string Account = 4;
+    Element Element = 5;
 }
 
-message Element{
-  uint64 Uid = 1;
-  string Skill = 2;
-  string SkillNeed = 3;
-  bool Star = 4;
-  int64 Boost = 5;
+message Element {
+    uint64 Uid = 1;
+    string Skill = 2;
+    string SkillNeed = 3;
+    bool Star = 4;
+    int64 Boost = 5;
+    string HighLightSkill = 6;
+    string HighLightSkillNeed = 7;
 }
